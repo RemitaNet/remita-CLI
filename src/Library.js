@@ -1,21 +1,21 @@
 const RemitaApiClient = require("./api/client");
 
-const BankService = require("./services/funds transfer/bank-service");
-const NameEnquiryService = require("./services/funds transfer/NameEnquiry-service");
-const TransferService = require("./services/funds transfer/transfer-service");
-const QueryService = require("./services/funds transfer/query-service");
+const BankService = require("./services/Funds Transfer/bank-service");
+const NameEnquiryService = require("./services/Funds Transfer/NameEnquiry-service");
+const TransferService = require("./services/Funds Transfer/transfer-service");
+const QueryService = require("./services/Funds Transfer/query-service");
 
 // const BulkTransferService = require("./services/funds transfer/bulk/bulk-transfer-service");
-const BulkQueryService = require("./services/funds transfer/bulk/bulk-query-service");
-const BulkDetailService = require("./services/funds transfer/bulk/bulk-details-service");
-const BulkTransactionStatusService = require("./services/funds transfer/bulk/bulk-transaction-status-service");
+const BulkQueryService = require("./services/Funds Transfer/bulk/bulk-query-service");
+const BulkDetailService = require("./services/Funds Transfer/bulk/bulk-details-service");
+const BulkTransactionStatusService = require("./services/Funds Transfer/bulk/bulk-transaction-status-service");
 
 const ChargeService = require("./services/Online Payments/charge-service");
 const VerifyService = require("./services/Online Payments/verify-service");
 
 const TokenService = require("./services/Authentication/token-service");
 
-const VendingService = require("./services/vending/vending-service");
+const VendingService = require("./services/Vending/vending-service");
 
 class RemitaClient {
   constructor({

@@ -3,7 +3,7 @@ const { Command } = require("commander");
 
 const RemitaApiClient = require("../../api/client");
 const { getConfig } = require("../../config/config-service");
-const VendingService = require("../../services/vending/vending-service");
+const VendingService = require("../../services/Vending/vending-service");
 const { printJson } = require("../../utils/output");
 const { formatError } = require("../../utils/error");
 

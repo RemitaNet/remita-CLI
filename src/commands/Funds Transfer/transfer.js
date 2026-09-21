@@ -2,7 +2,7 @@ const { Command } = require("commander");
 
 const RemitaApiClient = require("../../api/client");
 const { getConfig } = require("../../config/config-service");
-const TransferService = require("../../services/funds transfer/transfer-service");
+const TransferService = require("../../services/Funds Transfer/transfer-service");
 const { printJson } = require("../../utils/output");
 
 function createTransferCommand() {

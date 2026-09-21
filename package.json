@@ -1,10 +1,10 @@
 {
   "name": "remita-cli",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "",
-  "main": "Library.js",
+  "main": "src/Library.js",
   "bin": {
-  "remita": "src/index.js"
+    "remita": "src/index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,6 +17,7 @@
     "chalk": "^6.0.0",
     "commander": "^15.0.0",
     "dotenv": "^17.4.2",
-    "ora": "^9.4.1"
+    "ora": "^9.4.1",
+    "remita-cli": "*"
   }
 }

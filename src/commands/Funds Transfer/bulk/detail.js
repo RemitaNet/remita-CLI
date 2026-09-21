@@ -2,7 +2,7 @@ const { Command } = require("commander");
 
 const RemitaApiClient = require("../../../api/client");
 const { getConfig } = require("../../../config/config-service");
-const BulkDetailService = require("../../../services/funds transfer/bulk/bulk-details-service");
+const BulkDetailService = require("../../../services/Funds Transfer/bulk/bulk-details-service");
 const { printJson } = require("../../../utils/output");
 
 function createBulkDetailCommand() {

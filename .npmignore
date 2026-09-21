@@ -1,0 +1,6 @@
+*.tgz
+library-test.js
+.env
+.env.*
+.git
+.gitignore
