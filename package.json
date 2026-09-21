@@ -1,0 +1,42 @@
+{
+  "name": "remita-checkout-client",
+  "version": "0.1.0",
+  "description": "Typed client for the Remita Checkout REST API (pre-payment, fee calc, initiate, authorize, validate, verify, SSE status, channel config).",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "bin": {
+    "remita-checkout": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts src/cli.ts --format cjs,esm --dts --sourcemap --clean",
+    "dev": "tsup src/index.ts src/cli.ts --format cjs,esm --dts --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "remita",
+    "payment",
+    "checkout",
+    "nigeria",
+    "fintech"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.1"
+  }
+}
