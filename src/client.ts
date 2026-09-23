@@ -24,6 +24,7 @@ export interface RemitaCheckoutClientOptions extends ResolveEnvironmentOptions {
   publicKey: string;
   fetchImpl?: typeof fetch;
   timeoutMs?: number;
+  /** Extra headers merged after `publicKey` is set (so they can override). */
   defaultHeaders?: Record<string, string>;
   /** Called once if the environment couldn't be confidently detected from the key prefix (falls back to "qa"). */
   onEnvironmentDetectionFallback?: (guessed: "qa") => void;
@@ -54,7 +55,11 @@ export class RemitaCheckoutClient {
       baseUrl: resolved.baseUrl,
       fetchImpl: options.fetchImpl,
       timeoutMs: options.timeoutMs,
-      defaultHeaders: options.defaultHeaders,
+      defaultHeaders: {
+        // publicKey is required as a header on every checkout API call.
+        publicKey: options.publicKey,
+        ...options.defaultHeaders,
+      },
     });
   }
 
@@ -72,9 +77,24 @@ export class RemitaCheckoutClient {
     return this.http.request("POST", "/payment/initiate", { body: request });
   }
 
-  /** Posts authorization params (OTP, PIN, 3DS form fields, etc) to the processor-provided actionUrl from initiatePayment(). */
-  authorize(actionUrl: string, payload: AuthorizePayload): Promise<AuthorizeResponse> {
-    return this.http.request("POST", "", { body: payload, absoluteUrl: actionUrl });
+  /**
+   * Posts authorization params (OTP, PIN, 3DS form fields, etc) to the
+   * processor-provided actionUrl from initiatePayment().
+   *
+   * NOTE: CyberSource/Cardinal 3DS endpoints expect
+   * `application/x-www-form-urlencoded`. Pass `contentType` if the
+   * actionUrl is a 3DS processor endpoint.
+   */
+  authorize(
+    actionUrl: string,
+    payload: AuthorizePayload,
+    contentType?: string
+  ): Promise<AuthorizeResponse> {
+    void contentType;
+    return this.http.request("POST", "", {
+      body: payload,
+      absoluteUrl: actionUrl,
+    });
   }
 
   /**

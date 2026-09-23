@@ -20,21 +20,23 @@ export class RemitaApiError extends Error {
 /* -------------------------------------------------------------------- *
  * NOTE ON THE TYPES BELOW
  *
- * Only the endpoint list and one-line descriptions were available when
- * this client was generated — not the actual request/response bodies.
- * Every interface here is a best-effort guess based on standard payment-
- * gateway conventions and should be treated as UNVERIFIED until checked
- * against the real DTOs in remita-api-client.service.ts /
- * payment-status.service.ts. Index signatures are left in place so
- * extra or renamed fields don't break at the type level while you
- * tighten these.
+ * Field names for PrePaymentRequest are verified against a working QA
+ * cURL. The rest remain best-effort based on standard gateway
+ * conventions and should be tightened as real DTOs are confirmed.
+ *
+ * `publicKey` is NEVER part of a request body — it is sent as a header
+ * by RemitaCheckoutClient. Do not add it back to any request interface.
  * -------------------------------------------------------------------- */
 
 export interface PrePaymentRequest {
-  publicKey: string;
-  /** Either a transaction id or an RRR, per "validates transaction or RRR details". */
-  transactionId?: string;
-  rrr?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  paymentIdentifier: string;
+  currency: string;
+  narration?: string;
+  amount: number;
   [key: string]: unknown;
 }
 
@@ -49,11 +51,13 @@ export interface PrePaymentResponse {
   amount?: number | string;
   currency?: string;
   channels?: PaymentChannel[];
+  /** Forwarded from /payment/pre if the API echoes one. */
+  transactionId?: string;
+  paymentReference?: string;
   [key: string]: unknown;
 }
 
 export interface FeeChargeRequest {
-  publicKey: string;
   amount: number;
   channel: string;
   [key: string]: unknown;
@@ -66,7 +70,6 @@ export interface FeeChargeResponse {
 }
 
 export interface InitiatePaymentRequest {
-  publicKey: string;
   channel: string;
   amount: number;
   transactionId?: string;

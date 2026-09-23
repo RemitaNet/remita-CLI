@@ -7,6 +7,12 @@ import { parseArgs } from "node:util";
 import { RemitaCheckoutClient } from "./client";
 import type { RemitaEnvironment } from "./environment";
 
+declare const process: {
+  exit(code?: number): never;
+  exitCode?: number;
+  on(signal: string, listener: () => void): void;
+};
+
 function printUsage(): void {
   console.log(`
 remita-checkout <command> [options]
@@ -30,7 +36,7 @@ Global options:
   --json                       Print raw JSON only, useful for piping
 
 Command-specific options:
-  pre:        --rrr <rrr> | --txn <transactionId>
+  pre:        --rrr <rrr> | --txn <transactionId> [--payload '<json>']
   fee:        --amount <amount> --channel <channel>
   initiate:   --amount <amount> --channel <channel> [--txn <transactionId>]
   authorize:  --action-url <url> --payload '<json>'
@@ -116,10 +122,11 @@ async function main(): Promise<void> {
       case "pre": {
         const client = buildClient(values);
         const result = await client.prePayment({
+          ...parsePayload(values.payload as string | undefined),
           publicKey: client.publicKey,
           rrr: values.rrr as string | undefined,
           transactionId: values.txn as string | undefined,
-        });
+        } as unknown as Parameters<RemitaCheckoutClient["prePayment"]>[0]);
         output(values, "Pre-payment response", result);
         break;
       }

@@ -3,6 +3,8 @@ export interface StatusStreamOptions {
   onError?: (err: unknown) => void;
   onOpen?: () => void;
   fetchImpl?: typeof fetch;
+  /** Optional override; publicKey is sent as a query param by default. */
+  sendPublicKeyHeader?: boolean;
 }
 
 export interface StatusStreamHandle {
@@ -12,8 +14,7 @@ export interface StatusStreamHandle {
 /**
  * Opens the payment status SSE stream using a manual fetch + ReadableStream
  * reader rather than the browser-only `EventSource` global, so this works
- * identically in the browser and in Node 18+ (which implements the same
- * Fetch/streaming API surface).
+ * identically in the browser and in Node 18+.
  */
 export function openStatusStream(
   baseUrl: string,
@@ -31,12 +32,17 @@ export function openStatusStream(
     trxRef
   )}?publicKey=${encodeURIComponent(publicKey)}`;
 
+  const headers: Record<string, string> = { Accept: "text/event-stream" };
+  if (options.sendPublicKeyHeader) {
+    headers.publicKey = publicKey;
+  }
+
   const controller = new AbortController();
 
   (async () => {
     try {
       const response = await fetchImpl(url, {
-        headers: { Accept: "text/event-stream" },
+        headers,
         signal: controller.signal,
       });
 

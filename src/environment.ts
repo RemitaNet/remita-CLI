@@ -9,17 +9,14 @@ export const ENVIRONMENT_BASE_URLS: Record<RemitaEnvironment, string> = {
 /**
  * Best-effort prefix-based environment detection from a public key.
  *
- * IMPORTANT: this is a guess based on common gateway conventions (e.g.
- * Stripe-style `pk_test_` / `pk_live_` prefixes) — it has NOT been verified
- * against Remita's actual key format, because that wasn't available when
- * this was written. Compare a real QA key against a real production key
- * and adjust PREFIX_RULES below to match, or just pass `environment`
- * explicitly to skip detection entirely (recommended until verified).
+ * IMPORTANT: `pk_live_` is deliberately NOT mapped here. Remita's real key
+ * format has not been verified, and silently routing a key to production
+ * is worse than failing loudly. Callers who want production MUST pass
+ * `environment: "production"` (or `--env production` on the CLI) explicitly.
  */
 const PREFIX_RULES: Array<{ pattern: RegExp; environment: RemitaEnvironment }> = [
   { pattern: /^(qa[-_]|pk_qa_)/i, environment: "qa" },
   { pattern: /^(demo[-_]|pk_demo_|pk_test_)/i, environment: "demo" },
-  { pattern: /^(live[-_]|pk_live_|prod[-_])/i, environment: "production" },
 ];
 
 export interface ResolveEnvironmentOptions {
@@ -36,14 +33,6 @@ export interface ResolvedEnvironment {
   detected: boolean;
 }
 
-/**
- * Resolves which environment (and base URL) to use for a given public key.
- *
- * Never silently resolves to "production" purely from prefix detection —
- * if the key doesn't match a known pattern, this falls back to "qa" and
- * marks `detected: false` so callers can warn/log instead of risking a
- * misrouted live transaction.
- */
 export function resolveEnvironment(
   publicKey: string,
   options: ResolveEnvironmentOptions = {}
